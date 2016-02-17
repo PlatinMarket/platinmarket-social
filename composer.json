@@ -1,0 +1,12 @@
+{
+    "name": "bdogan/platinmarket-social",
+    "authors": [
+        {
+            "name": "bdogan",
+            "email": "bdogan85@gmail.com"
+        }
+    ],
+    "require": {
+      "facebook/php-sdk-v4" : "~5.0"
+    }
+}
