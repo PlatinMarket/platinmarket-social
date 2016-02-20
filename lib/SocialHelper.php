@@ -87,7 +87,6 @@ class SocialHelper
 
   protected function formRedirect($formData, $location, $message = "Lütfen bekleyin...")
   {
-
     ?>
     <html>
       <head>

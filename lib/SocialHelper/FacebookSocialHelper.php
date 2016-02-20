@@ -64,13 +64,22 @@ class FacebookSocialHelper extends SocialHelper
 
     $fb_user = $response->getGraphUser();
 
-    $user = array(
-      'id' => $fb_user['id'],
-      'first_name' => $fb_user['first_name'],
-      'last_name' => $fb_user['last_name'],
-      'email' => $fb_user['email'],
-      'gender' => ($fb_user['gender'] == "male" ? 1 : 2)
-    );
+    if (!isset($fb_user['email'])) return $this->returnOrigin(array('success' => 'error', 'message' => 'Üye olmak için mail adresinize izin vermelisiniz.'));
+
+    try
+    {
+      $user = array(
+        'id' => $fb_user['id'],
+        'first_name' => $fb_user['first_name'],
+        'last_name' => $fb_user['last_name'],
+        'email' => $fb_user['email'],
+        'gender' => ($fb_user['gender'] == "male" ? 1 : 2)
+      );
+    }
+    catch (Exception $e)
+    {
+      return $this->returnOrigin(array('success' => 'error', 'message' => $e->getMessage()));
+    }
 
     return $this->returnOrigin(array_merge(array('success' => 'ok', 'message' => 'Giriş başarılı'), $user));
   }
