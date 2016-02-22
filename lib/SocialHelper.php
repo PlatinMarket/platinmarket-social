@@ -36,8 +36,8 @@ class SocialHelper
 
   private function validateReturnUrl()
   {
-    if (is_null($this->_session_id) || is_null($_SESSION[$this->_session_id]['token'])) throw new Exception('Unauthorized', 401);
-    if ($this->_env != "dev" && !$_SESSION[$this->_session_id]['return_url']) throw new Exception('Unauthorized', 401);
+    if (is_null($this->_session_id) || !isset($_SESSION[$this->_session_id]['token']) || is_null($_SESSION[$this->_session_id]['token'])) throw new Exception('Unauthorized', 401);
+    if ($this->_env != "dev" && !isset($_SESSION[$this->_session_id]['return_url'])) throw new Exception('Unauthorized', 401);
     if ($_SESSION[$this->_session_id]['return_url'])
     {
       $hostname = parse_url($_SESSION[$this->_session_id]['return_url']);
