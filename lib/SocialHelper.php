@@ -28,6 +28,7 @@ class SocialHelper
     if (is_null($this->_session_id) && isset($_GET['token'])) $this->_session_id = uniqid('client_');
     if (is_null($this->_session_id)) return;
     if (!isset($_SESSION[$this->_session_id])) $_SESSION[$this->_session_id] = array();
+    if (!isset($_SESSION[$this->_session_id]['return_url']) && (!isset($_SERVER['HTTP_REFERER']) && !isset($_GET['return_url']))) return;
     if (!isset($_SESSION[$this->_session_id]['token'])) $_SESSION[$this->_session_id]['token'] = isset($_GET['token']) ? $_GET['token'] : null;
     if (!isset($_SESSION[$this->_session_id]['return_url'])) $_SESSION[$this->_session_id]['return_url'] = isset($_GET['return_url']) ? $_GET['return_url'] : $_SERVER['HTTP_REFERER'];
     if (!isset($_SESSION[$this->_session_id]['params'])) $_SESSION[$this->_session_id]['params'] = isset($_GET['params']) ? $_GET['params'] : null;
