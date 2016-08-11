@@ -5,12 +5,13 @@ class FacebookSocialHelper extends SocialHelper
 
   private $fb;
 
-  function __construct($provider)
+  function beforeAction()
   {
-    parent::__construct($provider);
+    $useDefaultConfig = $this->getApplicationData('facebook.use_default') !== "false" ? true : false;
+
     $this->fb = new Facebook\Facebook([
-      'app_id' => $this->config('app_id'),
-      'app_secret' => $this->config('app_secret'),
+      'app_id' => $useDefaultConfig ? $this->config('app_id') : $this->getApplicationData('facebook.app_id'),
+      'app_secret' => $useDefaultConfig ? $this->config('app_secret') : $this->getApplicationData('facebook.app_secret'),
       'default_graph_version' => $this->config('api_version')
     ]);
   }

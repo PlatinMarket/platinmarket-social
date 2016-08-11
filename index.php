@@ -53,7 +53,12 @@
   {
     $socialHelper = new $providerClass($provider);
     if (!method_exists($socialHelper, $providerAction)) notFoundPage();
-    $socialHelper->{$providerAction}();
+    $continue = true;
+    if (method_exists($socialHelper, "beforeAction")) $continue = $socialHelper->beforeAction() === false ? false : true;
+    if ($continue)
+      $socialHelper->{$providerAction}();
+    else
+      throw new Exception('Unauthorized', 401);
   }
   catch (Exception $e)
   {

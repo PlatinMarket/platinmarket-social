@@ -38,12 +38,31 @@ class SocialHelper
   {
     if (is_null($this->_session_id) || !isset($_SESSION[$this->_session_id]['token']) || is_null($_SESSION[$this->_session_id]['token'])) throw new Exception('Unauthorized', 401);
     if ($this->_env != "dev" && !isset($_SESSION[$this->_session_id]['return_url'])) throw new Exception('Unauthorized', 401);
-    if ($_SESSION[$this->_session_id]['return_url'])
+    if (!$_SESSION[$this->_session_id]['return_url'] || ($_SESSION[$this->_session_id]['return_url'] && !$this->validateReformSite($_SESSION[$this->_session_id]['return_url']))) throw new Exception('Unauthorized', 401);
+  }
+
+  private function validateReformSite($returnUrl)
+  {
+    return $this->getApplicationData('PlatinCRM_hizmet_id', $returnUrl) !== null;
+  }
+
+  protected function getApplicationData($key, $returnUrl = null)
+  {
+    if (!$returnUrl && $_SESSION[$this->_session_id]['return_url']) $returnUrl = $_SESSION[$this->_session_id]['return_url'];
+    if (!$returnUrl) return null;
+    try
     {
-      $hostname = parse_url($_SESSION[$this->_session_id]['return_url']);
-      $hostname = $hostname['host'];
-      $serverIp = gethostbyname($hostname);
-      if (strpos($serverIp, '192.168.') !== 0 && $serverIp != '127.0.0.1' && strpos($serverIp, '212.174.10.') !== 0) throw new Exception('Unauthorized', 401);
+      ini_set('default_socket_timeout', 5);
+      $url = parse_url($returnUrl);
+      $checkAddress = $url['scheme'] . '://' . $url['host'] . (isset($url['port']) ? ':' . $url['port'] : '') . '/application/read?key=' . urlencode($key);
+      $response = json_decode(@file_get_contents($checkAddress), true);
+      ini_set('default_socket_timeout', 60);
+      return (isset($response['found']) && $response['found'] === true) ? $response['value'] : null;
+    }
+    catch (Exception $e)
+    {
+      ini_set('default_socket_timeout', 60);
+      return null;
     }
   }
 
