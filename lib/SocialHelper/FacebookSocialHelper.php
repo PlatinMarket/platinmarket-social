@@ -56,7 +56,7 @@ class FacebookSocialHelper extends SocialHelper
 
     try
     {
-      $response = $this->fb->get('/me?fields=email,gender,first_name,last_name', $accessToken);
+      $response = $this->fb->get('/me?fields=email,first_name,last_name', $accessToken);
     }
     catch(Exception $e)
     {
@@ -73,8 +73,7 @@ class FacebookSocialHelper extends SocialHelper
         'id' => $fb_user['id'],
         'first_name' => $fb_user['first_name'],
         'last_name' => $fb_user['last_name'],
-        'email' => $fb_user['email'],
-        'gender' => ($fb_user['gender'] == "male" ? 1 : 2)
+        'email' => $fb_user['email']
       );
     }
     catch (Exception $e)
