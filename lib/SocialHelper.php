@@ -81,7 +81,7 @@ class SocialHelper
     $data['_token'] = $token;
     $data['_provider'] = strtolower($this->_provider);
     $data['_rand'] = $this->__createSalt();
-    $data['_hash'] = $this->__hash($data, array('id', 'first_name', 'last_name', 'email', 'gender', '_provider', '_token', '_rand'));
+    $data['_hash'] = $this->__hash($data, array('id', 'first_name', 'last_name', 'email', '_provider', '_token', '_rand'));
     if ($returnUrl) return $this->formRedirect($data, $returnUrl);
     pr($data);
   }
