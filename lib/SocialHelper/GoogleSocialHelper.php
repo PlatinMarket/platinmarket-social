@@ -7,13 +7,16 @@ class GoogleSocialHelper extends SocialHelper
 	$credential = @$_GET['credential'];
 
 	if ($credential !== null) {
-		$credential = explode('.', $credential);
-		$credential = @$credential[1];
-
-		if ($credential) {
-			$credential = base64_decode($credential);
-			$credential = json_decode($credential, true);
-
+		$client = new Google_Client();
+		$client->setClientId('188360825577-197abfqgpp1q273guk6rqs48p01s04n2.apps.googleusercontent.com');	
+		$credential = $client->verifyIdToken($credential);
+		$credential = $credential->getAttributes();
+		$credential = $credential['payload'];
+		/*
+			https://developers.google.com/identity/gsi/web/guides/verify-google-id-token#php
+			in this version of the library, if the credential couldn't be verified or tried to be tempered, instead of throwing an exception, google decided to kill the program. so the else statement or try-catch block will never be executed.
+		*/
+		if (is_array($credential)) {
 			$user = [
 				"id" => $credential['sub'],
 				"first_name" => $credential['given_name'],
