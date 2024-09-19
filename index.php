@@ -55,13 +55,14 @@
     if (!method_exists($socialHelper, $providerAction)) notFoundPage();
     $continue = true;
     if (method_exists($socialHelper, "beforeAction")) $continue = $socialHelper->beforeAction() === false ? false : true;
-    if ($continue)
+    if ($continue){
       $socialHelper->{$providerAction}();
+}
     else
-      throw new Exception('Unauthorized', 401);
+      throw new Exception('Unauthorize', 401);
   }
   catch (Exception $e)
   {
-    errorPage($e->getMessage(), ($e->getCode() ? $e->getCode() : 500));
+   errorPage($e->getMessage(), ($e->getCode() ? $e->getCode() : 500));
   }
 ?>
